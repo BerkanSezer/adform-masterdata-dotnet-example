@@ -6,7 +6,8 @@ This is an example of .net C# application, which explains how to consume MasterD
 For this application to work, you need:
   * Working Adform account
   * Permission to access Adform External API (which is described here: https://api.adform.com/)
-  * MasterData service enabled for you
+  * MasterData service enabled 
+  
 Please note, that accessing External API places additional requirements on your account security and password complexity. Please contact our support, if you have any questions.
   
 ### Instructions
