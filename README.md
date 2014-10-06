@@ -8,7 +8,8 @@ For this application to work, you need:
   * Permission to access Adform External API (which is described here: https://api.adform.com/)
   * MasterData service enabled 
   
-Please note, that accessing External API places additional requirements on your account security and password complexity. Please contact our support, if you have any questions.
+Please note, that accessing External API places additional requirements on your account security and password complexity. Needed information above is prepared by Adform after Master Data service is ordered. 
+Please contact our support, if you have any questions.
   
 ### Instructions
 #### To automate MasterData download you will be required to perform these steps:
@@ -23,7 +24,7 @@ Please note, that accessing External API places additional requirements on your 
       ```JSON
       {"Username":"user","Password":"password"}
       ```
-  * If you‘re credentials are valid, you will receive a JSON response: 
+  * If your credentials are valid, you will receive a JSON response: 
 
       ```JSON
       {"Ticket":"ticket"}
@@ -32,7 +33,7 @@ Please note, that accessing External API places additional requirements on your 
 
 2. To retrieve MasterData file list you will need to:
   * Send HTTP **GET** request to http://masterdata.adform.com:8652/list/xxx?render=json&authTicket=zzz, where ```xxx``` is your MasterData id and ```zzz``` is authentication ticket your received in **step #1**
-  * If you have provided valid authorization ticket and you have right to access MasterData, you will receive a JSON response: 
+  * If you have provided a valid authorization ticket and you have right to access MasterData, you will receive a JSON response: 
     
       ```JSON
       { "meta": 
