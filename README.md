@@ -19,13 +19,13 @@ You need a **working Adform account** and **MasterData service enabled** for you
       ```
   * If you‘re credentials are valid, you will receive a JSON response: 
 
-      ```
+      ```JSON
       {"Ticket":"ticket"}
       ```
   * You will need this ticket for further interactions
 
 2. To retrieve MasterData file list you will need to:
-  * Send HTTP **GET** request to http://masterdata.adform.com:8652/list/xxx?render=json&authTicket=zzz, where ```xxx``` is your MasterData id and ```zzz``` is authetication ticket your received in **step #1**
+  * Send HTTP **GET** request to http://masterdata.adform.com:8652/list/xxx?render=json&authTicket=zzz, where ```xxx``` is your MasterData id and ```zzz``` is authentication ticket your received in **step #1**
   * If you have provided valid authorization ticket and you have right to access MasterData, you will receive a JSON response: 
     
       ```JSON
@@ -46,8 +46,12 @@ You need a **working Adform account** and **MasterData service enabled** for you
         ] }
       ```
   * MasterData meta file is a separate entry. It contains multiple files with meta information for your account. It is optional though, and might be missing if service has just been enabled.
-  * Each file is represented by path – relative url to the file location, absolutePath – absolute url to file location, size – file size in bytes, create – date, when file was created.
+  * Each file is represented by: 
+      * ```path``` – relative URL to the file location
+      * ```absolutePath``` – absolute URL to file location
+      * ```size``` – file size in bytes
+      * ```create``` – date, when file was created
 3. To download MasterData files you will need to:
-  * Send HTTP GET request to absolutePath of each file, that was listed in 88step #288. Please note, that you will need to attach autorization ticket to each absolutePath you received. 
+  * Send HTTP **GET** request to absolutePath of each file, that was listed in **step #2**. Please note, that you will need to attach authorization ticket to each absolutePath you received. 
   * For example, when you have a absolutePath: http://masterdata.adform.com:8652/download/xxx/TrackingPoints/file1.zip you will need to send request to http://masterdata.adform.com:8652/download/xxx/TrackingPoints/file1.zip?authTicket=zzz
   * Open response stream and save contents to local file.
