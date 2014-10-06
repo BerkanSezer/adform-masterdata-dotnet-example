@@ -8,7 +8,7 @@ namespace DownloadAdformMasterData
 {
     internal class Program
     {
-        private const string AdformSecurityUrl = @"http://inlb.app.adform.com:50054/v1/auth/login";
+        private const string AdformSecurityUrl = @"https://api.adform.com/Services/Security/Login";
         private const string AdformMasterDataUrl = @"http://masterdata.adform.com:8652";
 
         private static int Main(string[] args)
