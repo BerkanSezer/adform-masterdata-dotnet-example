@@ -4,14 +4,19 @@ adform-masterdata-dotnet-example
 ### General
 This is an example of .net C# application, which explains how to consume MasterData file service.
 For this application to work, you need:
-  * Working Adform account
-  * Permission to access Adform External API (which is described here: https://api.adform.com/)
+  * Agency account with permission to access Adform External API (https://api.adform.com/)
   * MasterData service enabled 
   
-Please note, that accessing External API places additional requirements on your account security and password complexity. Needed information above is prepared by Adform after Master Data service is ordered. 
+Needed account is prepared by Adform after Master Data service is ordered. 
+Please note, that accessing External API places additional requirements on your account security and password complexity.
+Next steps:
+ * Clone git repository of download zip file
+ * Compile it and open it in command line
+ * Provide 4 parameters: id, login, password, where to store files
+
 Please contact our support, if you have any questions.
   
-### Instructions
+### Instructions (adviced to read if you won`t use .net C# solution)
 #### To automate MasterData download you will be required to perform these steps:
 1. Authenticate with Adform security and receive authorization ticket, which will be used for further interactions 
 2. Retrieve file list for your clients
