@@ -24,7 +24,7 @@ Please contact our support, if you have any questions.
 
 #### More technical details on the steps:
 1. To Authenticate with Adform security you will need to:
-  * Send HTTP **POST** request to http://inlb.app.adform.com:50054/v1/auth/login URL with following ```application/json``` content: 
+  * Send HTTP **POST** request to https://api.adform.com/Services/Security/Login URL with following ```application/json``` content: 
 
       ```JSON
       {"Username":"user","Password":"password"}
