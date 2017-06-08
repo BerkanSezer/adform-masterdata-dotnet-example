@@ -9,36 +9,38 @@ namespace DownloadAdformMasterData
     internal class Program
     {
         private const string AdformSecurityUrl = @"https://api.adform.com/Services/Security/Login";
-        private const string AdformMasterDataUrl = @"http://masterdata.adform.com:8652";
+        private const string AdformMasterDataUrl = @"https://api.adform.com/v1/buyer/masterdata";
 
         private static int Main(string[] args)
         {
             if (args.Length == 4)
             {
-                var listId = Int32.Parse(args[0]);
+                var setupId = args[0];
                 var user = args[1];
                 var password = args[2];
                 var targetDirectory = args[3];
 
                 Console.WriteLine("Authenticating with Adform security...");
+
                 var ticket = GetTicket(user, password);
+
                 if (String.IsNullOrEmpty(ticket))
                     throw new InvalidOperationException("Failed to retrieve authentication ticket");
                 
                 Console.WriteLine("Listing MasterData files...");
-                var list = GetFileList(listId, ticket);
+                var list = GetFileList(setupId, ticket);
 
                 Console.WriteLine("Downloading missing files...");
-                DownloadMissingFiles(list, ticket, targetDirectory);
+                DownloadMissingFiles(list, setupId, ticket, targetDirectory);
 
                 Console.WriteLine("Finished.");
             }
             else
             {
                 Console.WriteLine("Usage of the program:");
-                Console.WriteLine("[executable] [client-division-id] [adform-user] [adform-password] [target-directory]");
+                Console.WriteLine("[executable] [setup-id] [adform-user] [adform-password] [target-directory]");
                 Console.WriteLine("For example:");
-                Console.WriteLine("[executable] 123 user password c:/temp/md-123");
+                Console.WriteLine("[executable] 1997e40a-f0e6-44ac-b3b2-60c5d6fce1bd user password c:/temp/1997e40a-f0e6-44ac-b3b2-60c5d6fce1bd");
                 return -1;
             }
 
@@ -66,57 +68,60 @@ namespace DownloadAdformMasterData
                 throw new InvalidOperationException("Unexpected response status: " + response.StatusCode);
 
             using (var stream = response.GetResponseStream())
-                return ReadObject<LoginResponseDTO>(stream, (int) response.ContentLength).Ticket;
+                return ReadObject<LoginResponseDto>(stream, (int) response.ContentLength).Ticket;
         }
 
-        private static FileListDTO GetFileList(int listId, string ticket)
+        private static FileDto[] GetFileList(string setupId, string ticket)
         {
-            var wr = WebRequest.Create(AdformMasterDataUrl + "/list/" + listId + "?render=json&authTicket=" + ticket);
+            var wr = WebRequest.CreateHttp(AdformMasterDataUrl + "/files/" + setupId);
 
-            var response = (HttpWebResponse)wr.GetResponse();
+            AddTicketCookie(wr, ticket);
+
+            var response = (HttpWebResponse) wr.GetResponse();
+
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new InvalidOperationException("Unexpected response status: " + response.StatusCode);
 
             using (var stream = response.GetResponseStream())
-                return ReadObject<FileListDTO>(stream, (int)response.ContentLength);
+                return ReadObject<FileDto[]>(stream, (int) response.ContentLength);
         }
 
-        private static void DownloadMissingFiles(FileListDTO list, string ticket, string targetDirectory)
+        private static void DownloadMissingFiles(FileDto[] list, string setupId, string ticket, string targetDirectory)
         {
             // lets make sure target directory exists
             var target = new DirectoryInfo(targetDirectory);
+
             if (!target.Exists)
                 target.Create();
 
-            if (list.meta != null)
-                DownloadFile(list.meta, ticket, target);
-
-            if (list.files != null)
+            if (list != null)
             {
-                foreach (var file in list.files)
-                    DownloadFile(file, ticket, target);
+                foreach (var file in list)
+                    DownloadFile(file, setupId, ticket, target);
             }
         }
 
-        private static void DownloadFile(FileDTO file, string ticket, DirectoryInfo targetDirectory)
+        private static void DownloadFile(FileDto file, string setupId, string ticket, DirectoryInfo targetDirectory)
         {
-            var fileName = Path.GetFileName(file.absolutePath);
-            if (fileName == null)
-                throw new NullReferenceException("Invalid file name in path: " + file.absolutePath);
+            var resourceUrl = AdformMasterDataUrl + "/download/" + setupId + "/" + file.id;
 
             // skip if we have already have it
-            if (targetDirectory.GetFiles(fileName).Length != 0)
+            if (targetDirectory.GetFiles(file.name).Length != 0)
                 return;
 
-            var wr = WebRequest.Create(file.absolutePath + "?authTicket=" + ticket);
-            var response = (HttpWebResponse)wr.GetResponse();
+            var wr = WebRequest.CreateHttp(resourceUrl);
+
+            AddTicketCookie(wr, ticket);
+
+            var response = (HttpWebResponse) wr.GetResponse();
             
             using (var downloadStream = response.GetResponseStream())
             {
                 if (downloadStream == null)
                     throw new NullReferenceException("Could not retrieve response stream");
 
-                var targetFile = new FileInfo(targetDirectory.FullName + "\\" + fileName);
+                var targetFile = new FileInfo(targetDirectory.FullName + "\\" + file.name);
+
                 try
                 {
                     using (var fileStream = targetFile.Create())
@@ -157,25 +162,25 @@ namespace DownloadAdformMasterData
             var serializer = new JavaScriptSerializer();
             return serializer.Deserialize<T>(json);
         }
+
+        private static void AddTicketCookie(HttpWebRequest wr, string ticket)
+        {
+            wr.CookieContainer = new CookieContainer();
+            wr.CookieContainer.Add(new Cookie("authTicket", ticket, "/", ".adform.com"));
+        }
         
-        class LoginResponseDTO
+        class LoginResponseDto
         {
             public string Ticket;
         }
 
-        class FileListDTO
+        class FileDto
         {
-            public FileDTO meta;
-            public FileDTO[] files;
-        }
-
-
-        class FileDTO
-        {
-            public string path;
-            public string absolutePath;
+            public string id;
+            public string name;
+            public string setup;
             public long size;
-            public string created;
+            public string createdAt;
         }
     }
 }
