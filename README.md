@@ -71,6 +71,7 @@ Please contact Adform support, if you have any questions.
       * ```setup``` – master data setup id the file belongs to
       * ```size``` – file size in bytes
       * ```createdAt``` – date, when file was created
+      * ```checksumMD5``` – file checksum in MD5 format
 3. To download Master Data files you will need to:
   * Send HTTP **GET** request to https://api.adform.com/v1/buyer/masterdata/download/{setupId}/{fileId} with cookie ```authTicket={ticketValue}```, where ```{setupId}``` is your unique Master Data setup identificator, ```{fileId}``` is the unique file identificator, that was listed in **step #2** and ```{ticketValue}``` is the authentication ticket you received in **step #1**.
   * Open response stream and save content to local file.
