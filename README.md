@@ -1,8 +1,5 @@
 adform-masterdata-dotnet-example
 ================================
-### IMPORTANT!
-Following documentation describes the **latest** version of the Master Data API (https://api.adform.com/v1/help/buyer/masterdata/), if you are using the old one (http://masterdata.adform.com:8652) we are strongly recommend to migrate to the latest one because it uses the [HTTPS](https://en.wikipedia.org/wiki/HTTPS) what makes the service more secure. **Also keep in mind that the old one will be shut down 1st of September, 2017**. 
-If you still want to get example and documentation about the old version check ```deprecated``` tag.
 ### General
 This is an example of .net C# application, which explains how to consume Master Data file service.
 For this application to work, you need:
@@ -46,21 +43,24 @@ Please contact Adform support, if you have any questions.
         "id": "Click_7777__csv__gz",
         "setup": "c8599080-49e7-4a3b-b5bb-1811f7ed514a",
         "size": 27946,
-        "createdAt": "2017-06-05T11:00:30Z"
+        "createdAt": "2017-06-05T11:00:30Z",
+        "checksumMD5": "9e0e2fef866f6529a71eb9cc89001a77"
     },
     {
         "name": "meta.zip",
         "id": "meta__zip",
         "setup": "c8599080-49e7-4a3b-b5bb-1811f7ed514a",
         "size": 69311391,
-        "createdAt": "2017-06-05T10:31:30Z"
+        "createdAt": "2017-06-05T10:31:30Z",
+        "checksumMD5": "c12eee8f4f55a7894ea28649d7ad78fd"
     },
     {
         "name": "Trackingpoint_8888.csv.gz",
         "id": "Trackingpoint_8888__csv__gz",
         "setup": "c8599080-49e7-4a3b-b5bb-1811f7ed514a",
         "size": 54669,
-        "createdAt": "2017-06-05T10:03:20Z"
+        "createdAt": "2017-06-05T10:03:20Z",
+        "checksumMD5": "641d06bfbcec1ef5c50df06f70c4624a"
     }
     ]
     ```
